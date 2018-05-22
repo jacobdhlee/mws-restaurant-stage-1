@@ -324,7 +324,7 @@ nav h1 a {
     max-width: 460px;
   } */
 
-  .filter-options {
+  /* .filter-options {
     display: flex;
     flex-direction: row;
     padding: 1rem 0;
@@ -350,6 +350,56 @@ nav h1 a {
     margin: 10px;
     padding: 0 10px;
     width: 30vw;
+  } */
+  
+}
+
+
+@media(min-width: 1000px) {
+  #restaurants-list {
+    display: grid;
+    grid-template-rows: 33% 33% 33%;
+    /* grid-column-gap: 20px;
+    grid-row-gap: 10px; */
+    grid-gap: 10px 20px;
+    grid-template-areas: "list list list";
+  }
+
+
+  #restaurants-list li {
+    width: 27vw;
+    grid-area: "list";
+  }
+  /* .filter-options select {
+    max-width: 460px;
+  } */
+
+  /* .filter-options {
+    display: flex;
+    flex-direction: row;
+    padding: 1rem 0;
+    width: 100%;
+    background-color: #3397DB;
+    align-items: center;
+    justify-content: center;
+  }
+  .filter-options h2 {
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    line-height: 1;
+    margin: 0 20px;
+  }
+  .filter-options select {
+    background-color: white;
+    border: 1px solid #fff;
+    font-family: Arial,sans-serif;
+    font-size: 11pt;
+    height: 35px;
+    letter-spacing: 0;
+    margin: 10px;
+    padding: 0 10px;
+    width: 30vw; */
   }
   
 }
