@@ -115,7 +115,7 @@ nav h1 a {
 }
 /* ====================== Map ====================== */
 #map {
-  height: 400px;
+  height: 60vh;
   width: 100%;
   background-color: #ccc;
 }
@@ -131,7 +131,7 @@ nav h1 a {
 .filter-options h2 {
   color: white;
   font-size: 1rem;
-  font-weight: normal;
+  font-weight: bold;
   line-height: 1;
   margin: 0 20px;
 }
@@ -144,7 +144,7 @@ nav h1 a {
   letter-spacing: 0;
   margin: 10px;
   padding: 0 10px;
-  width: 200px;
+  width: 70vw;
 }
 
 /* ====================== Restaurant Listing ====================== */
@@ -302,4 +302,25 @@ nav h1 a {
 }
 #restaurant-hours td {
   color: #666;
+}
+
+
+@media(min-width: 650px) {
+  #restaurants-list {
+    display: grid;
+    grid-template-rows: 50% 50%;
+    /* grid-column-gap: 20px;
+    grid-row-gap: 10px; */
+    grid-gap: 10px 20px;
+    grid-template-areas: "list list";
+  }
+
+
+  #restaurants-list li {
+    width: 40vw;
+    grid-area: "list";
+  }
+  .filter-options select {
+    max-width: 460px;
+  }
 }
