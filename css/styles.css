@@ -9,6 +9,9 @@ body,td,th,p{
 }
 body {
   display: grid;
+  grid-template-areas: "header"
+                        "body"
+                        "footer";
 	background-color: #fdfdfd;
 	margin: 0;
 	position:relative;
@@ -36,6 +39,19 @@ h1, h2, h3, h4, h5, h6 {
 article, aside, canvas, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
 	display: block;
 }
+header {
+  grid-area: "header";
+}
+
+main {
+  grid-area: "body";
+}
+
+footer {
+  grid-area: "footer";
+}
+
+
 #maincontent {
   background-color: #f3f3f3;
   min-height: 100%;
@@ -219,25 +235,40 @@ nav h1 a {
 }
 
 /* ====================== Restaurant Details ====================== */
-.inside header {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 1000;
+.inside {
+  display: grid;
+  grid-template-areas: "inside-header"
+                        "inside-body"
+                        "inside-footer";
 }
+
+.inside header {
+  grid-area: "inside-header";
+  /* position: fixed; */
+  /* top: 0; */
+  width: 100%;
+  /* z-index: 1000; */
+}
+.inside #maincontent {
+  display: flex;
+  grid-area: "inside-body";
+  flex-direction: column;
+}
+.inside #footer {
+  grid-area: "inside-footer";
+}
+
 .inside #map-container {
   background: blue none repeat scroll 0 0;
-  height: 87%;
-  position: fixed;
-  right: 0;
-  top: 80px;
-  width: 50%;
+  height: 70vh;
+  width: 100%;
 }
 .inside #map {
   background-color: #ccc;
   height: 100%;
   width: 100%;
 }
+
 .inside #footer {
   bottom: 0;
   position: absolute;
