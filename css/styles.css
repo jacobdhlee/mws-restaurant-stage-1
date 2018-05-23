@@ -312,6 +312,9 @@ nav h1 a {
 
 
 @media(min-width: 650px) {
+  nav h1 a {
+    font-weight: 500;
+  }
   #restaurants-list {
     display: grid;
     grid-template-rows: 50% 50%;
@@ -348,6 +351,10 @@ nav h1 a {
 }
 
 @media(min-width: 1000px) {
+  nav h1 a {
+    font-size: 1em;
+    font-weight: 500;
+  }
   #restaurants-list {
     display: grid;
     grid-template-rows: 33% 33% 33%;
