@@ -130,7 +130,7 @@ nav h1 a {
 }
 .filter-options h2 {
   color: white;
-  font-size: 1rem;
+  font-size: 1.5em;
   font-weight: bold;
   line-height: 1;
   margin: 0 20px;
@@ -139,7 +139,7 @@ nav h1 a {
   background-color: white;
   border: 1px solid #fff;
   font-family: Arial,sans-serif;
-  font-size: 11pt;
+  font-size: 1em;
   height: 35px;
   letter-spacing: 0;
   margin: 10px;
@@ -171,6 +171,12 @@ nav h1 a {
   /* text-align: left; */
   width: 80vw;
 }
+
+#restaurants-list li:hover,
+#restaurants-list li:active {
+  border: 2px solid orange;
+}
+
 #restaurants-list .restaurant-img {
   background-color: #ccc;
   /* display: block; */
@@ -309,8 +315,6 @@ nav h1 a {
   #restaurants-list {
     display: grid;
     grid-template-rows: 50% 50%;
-    /* grid-column-gap: 20px;
-    grid-row-gap: 10px; */
     grid-gap: 10px 20px;
     grid-template-areas: "list list";
     align-items: center;
@@ -321,6 +325,25 @@ nav h1 a {
   #restaurants-list li {
     width: 40vw;
     grid-area: "list";
+  }
+
+  .filter-options {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  }
+
+  
+  .filter-options select {
+    width: 30vw;
+  }
+
+  #restaurants-list li h1 {
+    font-size: 12pt;
+  }
+  #restaurants-list p {
+    font-size: 10pt;
   }
 }
 
@@ -339,4 +362,23 @@ nav h1 a {
     width: 27vw;
     grid-area: "list";
   }
+  .filter-options {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .filter-options select {
+    width: 30vw;
+    max-width: 360px;
+  }
+
+  #restaurants-list li h1 {
+    font-size: 13pt;
+  }
+  #restaurants-list p {
+    font-size: 11pt;
+  }
+
 }
