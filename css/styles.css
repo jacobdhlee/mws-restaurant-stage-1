@@ -420,4 +420,45 @@ nav h1 a {
     font-size: 11pt;
   }
 
+  #breadcrumb {
+    font-size: 2em;
+    padding: 0.3em 1em;
+  }
+
+  .info-container {
+    display: flex;
+    flex-direction: row;
+  }
+  #restaurant-container, #reviews-container {
+    justify-content: flex-start;
+  }
+  #restaurant-container {
+    border-right: 1px solid #d9d9d9;
+  }
+
+  #restaurant-name {
+    font-size: 25pt;
+    font-weight: 200;
+  }
+  #restaurant-address {
+    font-size: 17pt;
+  }
+  #restaurant-cuisine {
+    font-size: 13pt;
+    font-weight: 300;
+  }
+
+  #reviews-container h2 {
+    font-size: 25pt;
+    font-weight: 300;
+  }
+  
+  #reviews-list li p {
+    font-size: 11pt;
+  }
+  #restaurant-hours td {
+    color: #666;
+    font-size: 11pt;
+  }
+
 }
