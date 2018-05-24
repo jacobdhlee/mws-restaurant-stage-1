@@ -98,9 +98,12 @@ nav h1 a {
   }
 }
 #breadcrumb {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     padding: 1rem 2rem;
     list-style: none;
-    background-color: #eee;
+    background-color: #e9e9e9;
     font-size: 1em;
     margin: 0;
 }
@@ -421,7 +424,7 @@ nav h1 a {
   }
 
   #breadcrumb {
-    font-size: 2em;
+    font-size: 2.5em;
     padding: 0.3em 1em;
   }
 
