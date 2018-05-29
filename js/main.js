@@ -2,9 +2,22 @@ let restaurants, neighborhoods, cuisines;
 var map;
 var markers = [];
 
+//register service worker here
+if (navigator.serviceWorker) {
+  navigator.serviceWorker
+    .register("/sw.js")
+    .then(function() {
+      console.log("it should create service woker");
+    })
+    .catch(function(err) {
+      console.log("register err is ", err);
+    });
+}
+
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
+
 document.addEventListener("DOMContentLoaded", event => {
   fetchNeighborhoods();
   fetchCuisines();
