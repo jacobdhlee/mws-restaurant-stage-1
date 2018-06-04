@@ -174,10 +174,11 @@ createRestaurantHTML = restaurant => {
   address.innerHTML = restaurant.address;
   li.append(address);
 
-  const more = document.createElement("button");
+  const more = document.createElement("a");
   more.innerHTML = "View Details";
-  more.src = DBHelper.urlForRestaurant(restaurant);
-  more.alt = `more detail on ${restaurant.name}`;
+  more.href = DBHelper.urlForRestaurant(restaurant);
+  more.setAttribute("role", "button");
+  more.setAttribute("aria-label", "Detail of restaurant");
   li.append(more);
 
   return li;
