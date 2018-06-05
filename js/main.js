@@ -105,7 +105,6 @@ updateRestaurants = () => {
 
   const cIndex = cSelect.selectedIndex;
   const nIndex = nSelect.selectedIndex;
-  console.log("cIndex : ", cSelect, " nIndex : ", nSelect);
   const cuisine = cSelect[cIndex].value;
   const neighborhood = nSelect[nIndex].value;
 
@@ -164,6 +163,7 @@ createRestaurantHTML = restaurant => {
 
   const name = document.createElement("h2");
   name.innerHTML = restaurant.name;
+  name.className = "restaurant-name";
   li.append(name);
 
   const neighborhood = document.createElement("p");
