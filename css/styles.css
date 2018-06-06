@@ -237,6 +237,19 @@ nav h1 a {
   border: 2px solid orange;
 }
 
+#restaurants-list li a:focus {
+  outline: 0;
+  box-shadow: 0 0 3px 3px #ff6161;
+  color: #ff6161;
+  background-color: white;
+}
+
+#neighborhoods-select:focus,
+#cuisines-select:focus {
+  outline: 0;
+  box-shadow: 0 0 3px 3px #ff6161;
+}
+
 /* ====================== Restaurant Details ====================== */
 .inside {
   display: grid;
