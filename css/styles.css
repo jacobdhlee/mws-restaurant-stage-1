@@ -327,7 +327,7 @@ nav h1 a {
   width: 100%;
 }
 
-#reviews-container h2 {
+#reviews-container h3 {
   color: #f58500;
   font-size: 24pt;
   font-weight: 300;
@@ -347,8 +347,7 @@ nav h1 a {
   border: 2px solid #f3f3f3;
   border-radius: 20px;
   list-style-type: none;
-  margin: 0.5rem 0;
-  /* overflow: hidden; */
+  margin: 1rem 0;
   width: 80%;
 }
 
@@ -357,7 +356,7 @@ nav h1 a {
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  background-color: #282828;
+  background-color: #4f4f4f;
   height: 2.5rem;
 }
 
@@ -371,7 +370,7 @@ nav h1 a {
 #reviews-list .rating-container {
   padding: 0 1rem;
   border-radius: 5px;
-  background-color: #f29b31;
+  background-color: #f0a64a;
   margin: 1.5rem 1rem 0.5rem 1rem;
   width: 6rem;
   /* height: 1.8rem; */
