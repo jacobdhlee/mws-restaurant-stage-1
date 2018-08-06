@@ -20,8 +20,7 @@ class DBHelper {
     xhr.onload = () => {
       if (xhr.status === 200) {
         // Got a success response from server!
-        const json = JSON.parse(xhr.responseText);
-        const restaurants = json.restaurants;
+        const restaurants = JSON.parse(xhr.responseText);
         callback(null, restaurants);
       } else {
         // Oops!. Got an error from server.
@@ -165,7 +164,10 @@ class DBHelper {
    * Restaurant image URL.
    */
   static imageUrlForRestaurant(restaurant) {
-    return `/img/${restaurant.photograph}`;
+    if (restaurant.id === 10) {
+      return `/img/${restaurant.id}.jpg`;
+    }
+    return `/img/${restaurant.photograph}.jpg`;
   }
 
   /**
