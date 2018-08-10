@@ -6,8 +6,8 @@ var markers = [];
 if (navigator.serviceWorker) {
   navigator.serviceWorker
     .register("/sw.js")
-    .then(function() {
-      console.log("it should create service woker");
+    .then(function(res) {
+      console.log("it should create service woker ", res);
     })
     .catch(function(err) {
       console.log("register err is ", err);

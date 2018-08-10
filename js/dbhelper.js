@@ -12,23 +12,50 @@ class DBHelper {
   }
 
   /**
+   * IndexedDB function.
+   */
+
+  static indexedDBmethod() {
+    const db = idb.open("restaurants", 1, function(upgradeDB) {
+      upgradeDB.createObjectStore("restaurants");
+    });
+
+    const idbMethod = {
+      get(key) {
+        return db.then(database => {
+          return database
+            .transaction("restaurants")
+            .objectStore("restaurants")
+            .get(key);
+        });
+      },
+      put(key, val) {
+        return db.then(db => {
+          const tx = db.transaction("restaurants", "readwrite");
+          tx.objectStore("restaurants").put(val, key);
+          return tx.complete;
+        });
+      }
+    };
+    return idbMethod;
+  }
+  /**
    * Fetch all restaurants.
    */
   static fetchRestaurants(callback) {
-    let xhr = new XMLHttpRequest();
-    xhr.open("GET", DBHelper.DATABASE_URL);
-    xhr.onload = () => {
-      if (xhr.status === 200) {
-        // Got a success response from server!
-        const restaurants = JSON.parse(xhr.responseText);
-        callback(null, restaurants);
-      } else {
-        // Oops!. Got an error from server.
-        const error = `Request failed. Returned status of ${xhr.status}`;
-        callback(error, null);
-      }
-    };
-    xhr.send();
+    const url = DBHelper.DATABASE_URL;
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        callback(null, data);
+        const dbStore = DBHelper.indexedDBmethod();
+        dbStore.put("restaurant", data);
+      })
+      .catch(err => {
+        const dbStore = DBHelper.indexedDBmethod();
+        const data = dbStore.get("restaurant").then(val => callback(null, val));
+        console.log(`something is wrong. Here is Error ${err}`);
+      });
   }
 
   /**
