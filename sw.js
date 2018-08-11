@@ -24,12 +24,31 @@ self.addEventListener("install", function(event) {
 });
 
 self.addEventListener("fetch", function(event) {
-  if (event.request.method !== "GET") return;
   event.respondWith(
     caches
       .match(event.request)
       .then(function(response) {
-        return response || fetch(event.request);
+        if (response) {
+          return response;
+        }
+        const cloneRequest = event.request.clone();
+        return fetch(cloneRequest)
+          .then(function(response) {
+            if (
+              !response || response.status !== 200 || response.type !== "basic"
+            ) {
+              return response;
+            }
+            const responseClone = response.clone();
+            caches
+              .open(cacheName)
+              .then(function(cache) {
+                cache.put(event.request, responseClone);
+              })
+              .catch(err => console.log(err));
+            return response;
+          })
+          .catch(err => console.log(err));
       })
       .catch(err => console.log(err))
   );
