@@ -5,7 +5,9 @@ var cacheUrl = [
   "/restaurant.html",
   "css/styles.css",
   "img/",
-  "js/main.js"
+  "js/main.js",
+  "/idb.js",
+  "js/dbhelper.js"
 ];
 
 self.addEventListener("install", function(event) {
