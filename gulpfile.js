@@ -4,19 +4,19 @@ const babel = require("gulp-babel");
 const concat = require("gulp-concat");
 
 gulp.task("minHTML", function() {
-  gulp.src("*.html").pipe(uglify()).pipe(gulp.dest("dist"));
+  return gulp.src("*.html").pipe(uglify()).pipe(gulp.dest("./dist"));
 });
 
 gulp.task("minCSS", function() {
-  gulp.src("css/*.css").pipe(uglify()).pipe(gulp.dest("dist/css"));
+  return gulp.src("css/*.css").pipe(uglify()).pipe(gulp.dest("dist/css"));
 });
 
 gulp.task("js", function() {
-  gulp
-    .src(["js/*.js", "*.js"])
-    .pipe(babel())
-    .pipe(uglify())
-    .pipe(gulp.dest("dist"));
+  return (gulp
+      .src(["js/*.js", "sw.js"])
+      // .pipe(babel())
+      .pipe(uglify())
+      .pipe(gulp.dest("dist")) );
 });
 
 gulp.task("default", ["minHTML", "minCSS", "js"]);
