@@ -1,0 +1,20 @@
+{
+  "short_name": "restaurant",
+  "name": "Udacity mws restaurant app",
+  "icons": [
+    {
+      "src": "/img/i.jpg",
+      "type": "image/jpg",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/img/2.jpg",
+      "type": "image/jpg",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "index.html",
+  "theme_color": "#495066",
+  "background_color": "#495066",
+  "display": "fullscreen"
+}
