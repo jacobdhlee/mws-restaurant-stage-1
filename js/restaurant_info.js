@@ -120,6 +120,7 @@ fillRestaurantHoursHTML = (
 fillReviewsHTML = (reviews = self.restaurant.reviews) => {
   const container = document.getElementById("reviews-container");
   const title = document.createElement("h3");
+
   title.innerHTML = "Reviews";
   container.appendChild(title);
 
@@ -191,4 +192,65 @@ getParameterByName = (name, url) => {
   if (!results) return null;
   if (!results[2]) return "";
   return decodeURIComponent(results[2].replace(/\+/g, " "));
+};
+
+/**
+ * Submit user's review
+ */
+
+getMonthString = num => {
+  switch (num) {
+    case 0:
+      return "January";
+      break;
+    case 1:
+      return "February";
+      break;
+    case 2:
+      return "March";
+      break;
+    case 3:
+      return "April";
+      break;
+    case 4:
+      return "May";
+      break;
+    case 5:
+      return "June";
+      break;
+    case 6:
+      return "July";
+      break;
+    case 7:
+      return "August";
+      break;
+    case 8:
+      return "September";
+      break;
+    case 9:
+      return "October";
+      break;
+    case 10:
+      return "November";
+      break;
+    case 11:
+      return "December";
+      break;
+  }
+};
+
+submitReview = () => {
+  event.preventDefault();
+  console.log("review submitted!");
+  const name = document.getElementsByClassName("name-input").name.value;
+  const rating = document.getElementsByClassName("review-rating").rating.value;
+  const comments = document.getElementsByClassName("commnets").commnets.value;
+  const dateO = new Date();
+  const date = `${getMonthString(dateO.getMonth())} ${dateO.getDate()}, ${dateO.getFullYear()}`;
+  let customReview = { name, date, rating, comments };
+  console.log("revuews is ", customReview);
+  if (name === "" || rating === "" || comments === "") {
+    const error = document.getElementsByClassName("error");
+    error[0].style.visibility = "visible";
+  }
 };

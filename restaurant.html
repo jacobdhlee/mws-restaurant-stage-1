@@ -52,8 +52,47 @@
       <!-- end restaurant -->
       <!-- Beginning reviews -->
       <section id="reviews-container">
+        <div class="add-review-container">
+          <h3 class="add-review-title">Add your review</h3>
+          <form id="review-form">
+            <div class="add-name-container">
+              <label for="name">Name : </label>
+              <input type="text" class="name-input" name="name" placeholder="Please put your name here" minlength="3" required />
+              <span></span>
+            </div>
+
+            <div class="add-rating-container">
+              <label for="rating">Rating : </label>
+              <select aria-label="review-rating" name="rating" class="review-rating" required>
+                <option value="">Please choose your rating</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+              <span></span>
+            </div>
+
+            <div class="add-comments-container">
+              <label for="commnets">Comments</label><span class="span"></span><br/>
+              <textarea class="commnets" name="commnets" placeholder="Write your commets" required></textarea>
+            </div>
+
+            <div class="button-container">
+              <button type="button" class="review-submit-btn" onClick="submitReview()">Submit</button>
+            </div>
+            <div class="error">
+              <h4 class="errorText">Please fill out name or/and rating</h4>
+            </div>
+          </form>
+
+        </div>
+
         <ul id="reviews-list"></ul>
       </section>
+      <!-- add review -->
+
     </div>
     <!-- End reviews -->
   </main>
