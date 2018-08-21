@@ -1,6 +1,7 @@
 let restaurant;
 var newMap;
 let reviews;
+let savedItem = 1;
 
 window.addEventListener(
   "online",
@@ -8,7 +9,9 @@ window.addEventListener(
     const review = localStorage.getItem("review");
     const parse = JSON.parse(review);
     if (parse) {
-      DBHelper.addReviewFetch(parse);
+      parse.forEach(saved => {
+        DBHelper.addReviewFetch(saved);
+      });
       updateReview();
       localStorage.removeItem("review");
     } else {
@@ -265,6 +268,7 @@ getMonthString = num => {
 
 submitReview = () => {
   event.preventDefault();
+  let form = document.getElementById("review-form");
   const name = document.getElementsByClassName("name-input").name.value;
   const rating = Number(
     document.getElementsByClassName("review-rating").rating.value
@@ -279,8 +283,20 @@ submitReview = () => {
     error[0].style.visibility = "visible";
   } else {
     if (!window.navigator.onLine) {
-      localStorage.setItem("review", JSON.stringify(customReview));
-      alert("Now offline will automatically added when online");
+      const saved = localStorage.getItem("review");
+      if (saved) {
+        let savedReview = JSON.parse(saved);
+        savedReview.push(customReview);
+        localStorage.removeItem("review");
+        localStorage.setItem("review", JSON.stringify(savedReview));
+      } else {
+        localStorage.setItem("review", JSON.stringify([customReview]));
+      }
+      alert(
+        `Now offline your ${savedItem} item(s) will automatically added when online`
+      );
+      savedItem += 1;
+      form.reset();
     } else {
       DBHelper.addReviewFetch(customReview);
       updateReview();
