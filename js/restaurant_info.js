@@ -2,11 +2,21 @@ let restaurant;
 var newMap;
 let reviews;
 
-if (window.navigator.onLine) {
-  console.log("online");
-} else {
-  console.log("offline");
-}
+window.addEventListener(
+  "online",
+  function(e) {
+    const review = localStorage.getItem("review");
+    const parse = JSON.parse(review);
+    if (parse) {
+      DBHelper.addReviewFetch(parse);
+      updateReview();
+      localStorage.removeItem("review");
+    } else {
+      console.log("not working");
+    }
+  },
+  false
+);
 
 /**
  * Initialize Google map, called from HTML.
@@ -268,8 +278,13 @@ submitReview = () => {
     const error = document.getElementsByClassName("error");
     error[0].style.visibility = "visible";
   } else {
-    DBHelper.addReviewFetch(customReview);
-    updateReview();
+    if (!window.navigator.onLine) {
+      localStorage.setItem("review", JSON.stringify(customReview));
+      alert("Now offline will automatically added when online");
+    } else {
+      DBHelper.addReviewFetch(customReview);
+      updateReview();
+    }
   }
 };
 
