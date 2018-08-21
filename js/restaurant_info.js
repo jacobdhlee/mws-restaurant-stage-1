@@ -1,5 +1,12 @@
 let restaurant;
 var newMap;
+let reviews;
+
+if (window.navigator.onLine) {
+  console.log("online");
+} else {
+  console.log("offline");
+}
 
 /**
  * Initialize Google map, called from HTML.
@@ -60,6 +67,14 @@ fetchRestaurantFromURL = callback => {
         console.error(error);
         return;
       }
+      DBHelper.fetchRestaurantReviewById(self.restaurant.id, (error, data) => {
+        if (error) {
+          console.log(error);
+        } else {
+          self.reviews = data;
+          fillReviewsHTML(data);
+        }
+      });
       fillRestaurantHTML();
       callback(null, restaurant);
     });
@@ -89,7 +104,6 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
     fillRestaurantHoursHTML();
   }
   // fill reviews
-  fillReviewsHTML();
 };
 
 /**
@@ -117,7 +131,7 @@ fillRestaurantHoursHTML = (
 /**
  * Create all reviews HTML and add them to the webpage.
  */
-fillReviewsHTML = (reviews = self.restaurant.reviews) => {
+fillReviewsHTML = reviews => {
   const container = document.getElementById("reviews-container");
   const title = document.createElement("h3");
 
@@ -241,16 +255,24 @@ getMonthString = num => {
 
 submitReview = () => {
   event.preventDefault();
-  console.log("review submitted!");
   const name = document.getElementsByClassName("name-input").name.value;
-  const rating = document.getElementsByClassName("review-rating").rating.value;
+  const rating = Number(
+    document.getElementsByClassName("review-rating").rating.value
+  );
   const comments = document.getElementsByClassName("commnets").commnets.value;
   const dateO = new Date();
   const date = `${getMonthString(dateO.getMonth())} ${dateO.getDate()}, ${dateO.getFullYear()}`;
-  let customReview = { name, date, rating, comments };
-  console.log("revuews is ", customReview);
-  if (name === "" || rating === "" || comments === "") {
+  const restaurant_id = Number(getParameterByName("id"));
+  let customReview = { restaurant_id, name, rating, comments, date };
+  if (!name || !rating || !comments) {
     const error = document.getElementsByClassName("error");
     error[0].style.visibility = "visible";
+  } else {
+    DBHelper.addReviewFetch(customReview);
+    updateReview();
   }
+};
+
+updateReview = () => {
+  window.location.reload();
 };

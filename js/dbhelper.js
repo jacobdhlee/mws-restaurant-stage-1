@@ -11,6 +11,11 @@ class DBHelper {
     return `http://localhost:${port}/restaurants`;
   }
 
+  static get REVIEWS_URL() {
+    const port = 1337;
+    return `http://localhost:${port}/reviews`;
+  }
+
   /**
    * IndexedDB function.
    */
@@ -56,6 +61,47 @@ class DBHelper {
         const data = dbStore.get("restaurant").then(val => callback(null, val));
         console.log(`something is wrong. Here is Error ${err}`);
       });
+  }
+
+  static storeData() {
+    const url = `http://localhost:1337/reviews`;
+    const dbStore = DBHelper.indexedDBmethod();
+    fetch(url)
+      .then(res => res.json())
+      .then(data => {
+        dbStore.put("reviews", data);
+      })
+      .catch(err => console.log("err when get all reviews ", err));
+  }
+
+  static getReviewData() {
+    const dbStore = DBHelper.indexedDBmethod();
+    let review = [];
+    dbStore
+      .get("reviews")
+      .then(reviews => {
+        review = reviews;
+      })
+      .catch(err =>
+        console.log(
+          `got an error while get data from indexedDB. error is ${err}`
+        )
+      );
+    return review;
+  }
+
+  static fetchRestaurantReviewById(id, callback) {
+    const url = `http://localhost:1337/reviews/?restaurant_id=${id}`;
+    let dataReview = DBHelper.getReviewData();
+    if (dataReview.length < 31) {
+      DBHelper.storeData();
+    }
+    fetch(url)
+      .then(res => res.json())
+      .then(data => {
+        callback(null, data.reverse());
+      })
+      .catch(err => console.log("err is ", err));
   }
 
   /**
@@ -213,5 +259,24 @@ class DBHelper {
     );
     marker.addTo(newMap);
     return marker;
+  }
+
+  static addReviewFetch(data) {
+    const dbStore = DBHelper.indexedDBmethod();
+    let dataReview = DBHelper.getReviewData();
+    const url = "http://localhost:1337/reviews/";
+    const headers = new Headers({
+      "Content-Type": "application/json; charset=utf-8"
+    });
+    const method = "POST";
+    const body = JSON.stringify(data);
+    const option = { method, body, headers };
+    fetch(url, option)
+      .then(res => res.json())
+      .catch(err => console.log(`post fetch error is ${err}`))
+      .then(data => {
+        dataReview.push(data);
+        dbStore.put("reviews", dataReview);
+      });
   }
 }
