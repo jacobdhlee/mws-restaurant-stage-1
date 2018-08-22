@@ -1,7 +1,7 @@
 let restaurants, neighborhoods, cuisines;
 var newMap;
 var markers = [];
-
+var likes = {};
 //register service worker here
 if (navigator.serviceWorker) {
   navigator.serviceWorker
@@ -177,6 +177,18 @@ createRestaurantHTML = restaurant => {
   name.innerHTML = restaurant.name;
   name.className = "restaurant-name";
   li.append(name);
+
+  const like = document.createElement("div");
+  like.className = "like";
+  like.onclick = DBHelper.likeClick.bind(this, restaurant);
+  like.setAttribute("role", "button");
+  like.setAttribute("aria-label", "like");
+  li.append(like);
+
+  const likeText = document.createElement("h3");
+  likeText.className = "likeText";
+  likeText.innerHTML = "Like";
+  like.append(likeText);
 
   const neighborhood = document.createElement("p");
   neighborhood.innerHTML = restaurant.neighborhood;

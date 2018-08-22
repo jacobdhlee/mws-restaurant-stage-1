@@ -279,4 +279,63 @@ class DBHelper {
         dbStore.put("reviews", dataReview);
       });
   }
+
+  static checkDislike(restaurant, callback) {
+    let dislike = [];
+    const url = "http://localhost:1337/restaurants/?is_favorite=false";
+    fetch(url)
+      .then(res => res.json())
+      .then(data => {
+        dislike = [...data];
+        let match = dislike.filter(res => {
+          return res.id === restaurant.id;
+        });
+        callback(match);
+      })
+      .catch(err => console.log(err));
+  }
+  static likeClick(restaurant) {
+    const original = document.getElementsByClassName("like");
+    let id = restaurant.id - 1;
+    DBHelper.checkDislike(restaurant, match => {
+      const findMatch = match.filter(res => {
+        return res.id === restaurant.id;
+      });
+      if (match.length > 0) {
+        DBHelper.fetchLike(restaurant.id, true);
+        original[id].classList.add("liked");
+        original[id].setAttribute("aria-label", "add to favorite");
+      } else {
+        DBHelper.fetchLike(restaurant.id, false);
+        original[id].classList.remove("liked");
+        original[id].setAttribute("aria-label", "remove favorite");
+      }
+    });
+  }
+
+  static fetchLike(id, like) {
+    const likeURL = `http://localhost:1337/restaurants/${id}/?is_favorite=true`;
+    const dislikeURL = `http://localhost:1337/restaurants/${id}/?is_favorite=false`;
+    const options = { method: "PUT" };
+    if (like) {
+      fetch(likeURL, options)
+        .then(() => {
+          DBHelper.updateLikeDB(id);
+          console.log("change to liked ");
+        })
+        .catch(err => console.log(err));
+    } else {
+      fetch(dislikeURL, options)
+        .then(() => console.log("change to disliked"))
+        .catch(err => console.log(err));
+    }
+  }
+
+  static updateLikeDB(id) {
+    const dbStore = DBHelper.indexedDBmethod();
+    dbStore
+      .get(id)
+      .then(data => console.log(data))
+      .catch(err => console.log(err));
+  }
 }

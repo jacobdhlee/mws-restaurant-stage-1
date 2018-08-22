@@ -216,6 +216,32 @@ nav h1 a {
   margin: 20px 0 10px;
   text-transform: uppercase;
 }
+
+#restaurants-list .like {
+  display: flex;
+  justify-content: center;
+  border: 1px solid black;
+  margin: 0.8rem;
+  height: 2em;
+}
+
+#restaurants-list .like:hover {
+  border: 2px solid #f45050
+}
+
+#restaurants-list .like:active {
+  background-color: #ff5d5d;
+}
+
+#restaurants-list .liked {
+  background-color: red;
+}
+
+#restaurants-list .liked > h3 {
+  color: white;
+}
+
+
 #restaurants-list p {
   margin: 0;
   font-size: 11pt;
@@ -398,10 +424,18 @@ nav h1 a {
 }
 
 .add-comments-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   margin-top: 1em;
 }
-
+.title-box {
+  display: flex;
+  width: 100%;
+  align-items: flex-start;
+}
 .add-comments-container textarea {
   height: 10em;
   width: 90%;
