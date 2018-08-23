@@ -31,6 +31,9 @@ class DBHelper {
             keyPath: "id"
           });
           reviews.createIndex("restaurant_id", "restaurant_id");
+
+        case 2:
+          upgradeDB.createObjectStore("offline", { keyPath: "id" });
       }
     });
   }
@@ -335,6 +338,41 @@ class DBHelper {
         store.put(restaurant[0]);
         return tx.complete;
       });
+    });
+  }
+
+  static offlineUpdateDB(restaurant) {
+    this.dbPromise.then(db => {
+      console.log("restrautnr dsafa ", restaurant);
+      const tx = db.transaction("offline", "readwrite");
+      const store = tx.objectStore("offline");
+      store.put(restaurant);
+      return tx.complete;
+    });
+  }
+
+  static checkOfflineDB() {
+    this.dbPromise.then(db => {
+      if (!db) {
+        return;
+        console.log("nothing here");
+      } else {
+        const store = db.transaction("offline").objectStore("offline");
+        return store.getAll().then(restaurants => {
+          restaurants.forEach(restaurant => {
+            this.addReviewFetch(restaurant);
+          });
+        });
+        this.deleteOfflindData();
+      }
+    });
+  }
+  static deleteOfflindData() {
+    this.dbPromise.then(db => {
+      const tx = db.transaction("offline");
+      const store = tx.objectStore("offline");
+      store.clear();
+      return tx.complete;
     });
   }
 }

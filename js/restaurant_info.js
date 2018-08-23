@@ -6,17 +6,8 @@ let savedItem = 1;
 window.addEventListener(
   "online",
   function(e) {
-    const review = localStorage.getItem("review");
-    const parse = JSON.parse(review);
-    if (parse) {
-      parse.forEach(saved => {
-        DBHelper.addReviewFetch(saved);
-      });
-      updateReview();
-      localStorage.removeItem("review");
-    } else {
-      console.log("not working");
-    }
+    DBHelper.checkOfflineDB();
+    updateReview();
   },
   false
 );
@@ -283,15 +274,7 @@ submitReview = () => {
     error[0].style.visibility = "visible";
   } else {
     if (!window.navigator.onLine) {
-      const saved = localStorage.getItem("review");
-      if (saved) {
-        let savedReview = JSON.parse(saved);
-        savedReview.push(customReview);
-        localStorage.removeItem("review");
-        localStorage.setItem("review", JSON.stringify(savedReview));
-      } else {
-        localStorage.setItem("review", JSON.stringify([customReview]));
-      }
+      DBHelper.offlineUpdateDB(customReview);
       alert(
         `Now offline your ${savedItem} item(s) will automatically added when online`
       );
