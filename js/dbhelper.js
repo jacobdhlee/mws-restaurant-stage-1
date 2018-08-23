@@ -20,30 +20,42 @@ class DBHelper {
    * IndexedDB function.
    */
 
-  static indexedDBmethod() {
-    const db = idb.open("restaurants", 1, function(upgradeDB) {
-      upgradeDB.createObjectStore("restaurants");
-    });
+  static dbPromise() {
+    return idb.open("mws-restaurants", 3, function(upgradeDB) {
+      switch (upgradeDB.oldVersion) {
+        case 0:
+          upgradeDB.createObjectStore("restaurants", { keyPath: "id" });
 
-    const idbMethod = {
-      get(key) {
-        return db.then(database => {
-          return database
-            .transaction("restaurants")
-            .objectStore("restaurants")
-            .get(key);
-        });
-      },
-      put(key, val) {
-        return db.then(db => {
-          const tx = db.transaction("restaurants", "readwrite");
-          tx.objectStore("restaurants").put(val, key);
-          return tx.complete;
-        });
+        case 1:
+          upgradeDB.createObjectStore("reviews", { keyPath: "id" });
       }
-    };
-    return idbMethod;
+    });
   }
+
+  // static indexedDBmethod() {
+  //   const db = idb.open("restaurants", 1, function(upgradeDB) {
+  //     upgradeDB.createObjectStore("restaurants");
+  //   });
+
+  //   const idbMethod = {
+  //     get(key) {
+  //       return db.then(database => {
+  //         return database
+  //           .transaction("restaurants")
+  //           .objectStore("restaurants")
+  //           .get(key);
+  //       });
+  //     },
+  //     put(key, val) {
+  //       return db.then(db => {
+  //         const tx = db.transaction("restaurants", "readwrite");
+  //         tx.objectStore("restaurants").put(val, key);
+  //         return tx.complete;
+  //       });
+  //     }
+  //   };
+  //   return idbMethod;
+  // }
   /**
    * Fetch all restaurants.
    */
@@ -53,14 +65,30 @@ class DBHelper {
       .then(response => response.json())
       .then(data => {
         callback(null, data);
-        const dbStore = DBHelper.indexedDBmethod();
-        dbStore.put("restaurant", data);
+        // const dbStore = DBHelper.indexedDBmethod();
+        // dbStore.put("restaurant", data);
+        this.dbPromise().then(db => {
+          const tx = db.transaction("restaurants", "readwrite");
+          const store = tx.objectStore("restaurants");
+          data.forEach(restaurant => store.put(restaurant));
+          return tx.complete;
+        });
       })
       .catch(err => {
-        const dbStore = DBHelper.indexedDBmethod();
-        const data = dbStore.get("restaurant").then(val => callback(null, val));
+        this.cacheRestaurants();
         console.log(`something is wrong. Here is Error ${err}`);
       });
+  }
+
+  static cacheRestaurants() {
+    this.dbPromise()
+      .then(db => {
+        return db
+          .transaction("restaurants")
+          .objectStore("restaurants")
+          .getAll();
+      })
+      .then(restaurants => console.log("offline restaurants ", restaurants));
   }
 
   static storeData() {
