@@ -27,35 +27,13 @@ class DBHelper {
           upgradeDB.createObjectStore("restaurants", { keyPath: "id" });
 
         case 1:
-          upgradeDB.createObjectStore("reviews", { keyPath: "id" });
+          const reviews = upgradeDB.createObjectStore("reviews", {
+            keyPath: "id"
+          });
+          reviews.createIndex("restaurant_id", "restaurant_id");
       }
     });
   }
-
-  // static indexedDBmethod() {
-  //   const db = idb.open("restaurants", 1, function(upgradeDB) {
-  //     upgradeDB.createObjectStore("restaurants");
-  //   });
-
-  //   const idbMethod = {
-  //     get(key) {
-  //       return db.then(database => {
-  //         return database
-  //           .transaction("restaurants")
-  //           .objectStore("restaurants")
-  //           .get(key);
-  //       });
-  //     },
-  //     put(key, val) {
-  //       return db.then(db => {
-  //         const tx = db.transaction("restaurants", "readwrite");
-  //         tx.objectStore("restaurants").put(val, key);
-  //         return tx.complete;
-  //       });
-  //     }
-  //   };
-  //   return idbMethod;
-  // }
   /**
    * Fetch all restaurants.
    */
@@ -65,8 +43,6 @@ class DBHelper {
       .then(response => response.json())
       .then(data => {
         callback(null, data);
-        // const dbStore = DBHelper.indexedDBmethod();
-        // dbStore.put("restaurant", data);
         this.dbPromise().then(db => {
           const tx = db.transaction("restaurants", "readwrite");
           const store = tx.objectStore("restaurants");
@@ -75,61 +51,48 @@ class DBHelper {
         });
       })
       .catch(err => {
-        this.cacheRestaurants();
+        this.dbPromise()
+          .then(db => {
+            return db
+              .transaction("restaurants")
+              .objectStore("restaurants")
+              .getAll();
+          })
+          .then(restaurants => {
+            callback(null, restaurants);
+          });
+
         console.log(`something is wrong. Here is Error ${err}`);
       });
   }
 
-  static cacheRestaurants() {
-    this.dbPromise()
-      .then(db => {
-        return db
-          .transaction("restaurants")
-          .objectStore("restaurants")
-          .getAll();
-      })
-      .then(restaurants => console.log("offline restaurants ", restaurants));
-  }
-
-  static storeData() {
-    const url = `http://localhost:1337/reviews`;
-    const dbStore = DBHelper.indexedDBmethod();
-    fetch(url)
-      .then(res => res.json())
-      .then(data => {
-        dbStore.put("reviews", data);
-      })
-      .catch(err => console.log("err when get all reviews ", err));
-  }
-
-  static getReviewData() {
-    const dbStore = DBHelper.indexedDBmethod();
-    let review = [];
-    dbStore
-      .get("reviews")
-      .then(reviews => {
-        review = reviews;
-      })
-      .catch(err =>
-        console.log(
-          `got an error while get data from indexedDB. error is ${err}`
-        )
-      );
-    return review;
-  }
-
   static fetchRestaurantReviewById(id, callback) {
     const url = `http://localhost:1337/reviews/?restaurant_id=${id}`;
-    let dataReview = DBHelper.getReviewData();
-    if (dataReview.length < 31) {
-      DBHelper.storeData();
-    }
     fetch(url)
       .then(res => res.json())
       .then(data => {
+        this.dbPromise().then(db => {
+          const tx = db.transaction("reviews", "readwrite");
+          const store = tx.objectStore("reviews");
+          // store.put({ id: data });
+          data.forEach(review => store.put(review));
+          return tx.complete;
+        });
         callback(null, data.reverse());
       })
-      .catch(err => console.log("err is ", err));
+      .catch(err => {
+        this.dbPromise()
+          .then(db => {
+            const tx = db.transaction("reviews");
+            const store = tx.objectStore("reviews");
+            const index = store.index("restaurant_id");
+            return index.getAll(id);
+          })
+          .then(reviews => {
+            callback(null, reviews.reverse());
+          });
+        console.log("err is ", err);
+      });
   }
 
   /**
