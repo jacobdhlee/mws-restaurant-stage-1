@@ -253,8 +253,6 @@ class DBHelper {
   }
 
   static addReviewFetch(data) {
-    const dbStore = DBHelper.indexedDBmethod();
-    let dataReview = DBHelper.getReviewData();
     const url = "http://localhost:1337/reviews/";
     const headers = new Headers({
       "Content-Type": "application/json; charset=utf-8"
@@ -266,8 +264,12 @@ class DBHelper {
       .then(res => res.json())
       .catch(err => console.log(`post fetch error is ${err}`))
       .then(data => {
-        dataReview.push(data);
-        dbStore.put("reviews", dataReview);
+        this.dbPromise().then(db => {
+          const tx = db.transaction("reviews", "readwrite");
+          const store = tx.objectStore("reviews");
+          store.put(data);
+          return tx.complete;
+        });
       });
   }
 
