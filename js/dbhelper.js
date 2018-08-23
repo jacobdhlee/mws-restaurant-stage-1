@@ -333,7 +333,6 @@ class DBHelper {
       const store = tx.objectStore("restaurants");
       store.getAll(id).then(restaurant => {
         let isFavorite = !restaurant[0].is_favorite;
-        console.log("asfas ", restaurant[0]);
         restaurant[0].is_favorite = isFavorite;
         store.put(restaurant[0]);
         return tx.complete;
@@ -343,7 +342,6 @@ class DBHelper {
 
   static offlineUpdateDB(restaurant) {
     this.dbPromise.then(db => {
-      console.log("restrautnr dsafa ", restaurant);
       const tx = db.transaction("offline", "readwrite");
       const store = tx.objectStore("offline");
       store.put(restaurant);
