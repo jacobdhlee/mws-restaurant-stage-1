@@ -8,6 +8,7 @@ window.addEventListener(
   function(e) {
     DBHelper.checkOfflineDB();
     updateReview();
+    savedItem = 1;
   },
   false
 );
