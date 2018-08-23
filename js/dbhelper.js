@@ -325,10 +325,16 @@ class DBHelper {
   }
 
   static updateLikeDB(id) {
-    const dbStore = DBHelper.indexedDBmethod();
-    dbStore
-      .get(id)
-      .then(data => console.log(data))
-      .catch(err => console.log(err));
+    this.dbPromise().then(db => {
+      const tx = db.transaction("restaurants", "readwrite");
+      const store = tx.objectStore("restaurants");
+      store.getAll(id).then(restaurant => {
+        let isFavorite = !restaurant[0].is_favorite;
+        console.log("asfas ", restaurant[0]);
+        restaurant[0].is_favorite = isFavorite;
+        store.put(restaurant[0]);
+        return tx.complete;
+      });
+    });
   }
 }
