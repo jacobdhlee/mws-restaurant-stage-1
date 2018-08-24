@@ -179,10 +179,18 @@ createRestaurantHTML = restaurant => {
   li.append(name);
 
   const like = document.createElement("div");
-  like.className = "like";
   like.onclick = DBHelper.likeClick.bind(this, restaurant);
   like.setAttribute("role", "button");
   like.setAttribute("aria-label", "like");
+  if (
+    restaurant["is_favorite"] === false ||
+    restaurant["is_favorite"] === undefined ||
+    restaurant["is_favorite"] === "false"
+  ) {
+    like.className = "like";
+  } else {
+    like.className = "like liked";
+  }
   li.append(like);
 
   const likeText = document.createElement("h3");
