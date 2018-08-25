@@ -33,7 +33,11 @@ class DBHelper {
           reviews.createIndex("restaurant_id", "restaurant_id");
 
         case 2:
-          upgradeDB.createObjectStore("offline", { keyPath: "id" });
+          const offline = upgradeDB.createObjectStore("offline", {
+            keyPath: "restaurant_id",
+            autoIncrement: true
+          });
+          offline.createIndex("restaurant_id", "restaurant_id");
       }
     });
   }
@@ -84,18 +88,34 @@ class DBHelper {
         callback(null, data.reverse());
       })
       .catch(err => {
-        this.dbPromise()
-          .then(db => {
-            const tx = db.transaction("reviews");
-            const store = tx.objectStore("reviews");
-            const index = store.index("restaurant_id");
-            return index.getAll(id);
-          })
-          .then(reviews => {
-            callback(null, reviews.reverse());
-          });
+        console.log("working ?");
+        let allReviews = [];
+        this.pullReviewFromDB(id, "reviews", (err, reviews) => {
+          if (err) {
+            console.log("err is ", err);
+          } else {
+            this.pullReviewFromDB(id, "offline", (err, offlineReview) => {
+              if (err) {
+                console.log(err);
+              } else {
+                allReviews = [...reviews, ...offlineReview];
+                callback(null, allReviews.reverse());
+              }
+            });
+          }
+        });
         console.log("err is ", err);
       });
+  }
+
+  static pullReviewFromDB(id, table, callback) {
+    return this.dbPromise().then(db => {
+      const tx = db.transaction(table);
+      const store = tx.objectStore(table);
+      store.getAll().then(reviews => {
+        callback(null, reviews);
+      });
+    });
   }
 
   /**
@@ -341,7 +361,7 @@ class DBHelper {
   }
 
   static offlineUpdateDB(restaurant) {
-    this.dbPromise.then(db => {
+    this.dbPromise().then(db => {
       const tx = db.transaction("offline", "readwrite");
       const store = tx.objectStore("offline");
       store.put(restaurant);
@@ -350,25 +370,27 @@ class DBHelper {
   }
 
   static checkOfflineDB() {
-    this.dbPromise.then(db => {
+    this.dbPromise().then(db => {
       if (!db) {
         return;
         console.log("nothing here");
       } else {
         const store = db.transaction("offline").objectStore("offline");
-        return store.getAll().then(restaurants => {
+        const index = store.index("restaurant_id");
+        return index.getAll().then(restaurants => {
           restaurants.forEach(restaurant => {
             this.addReviewFetch(restaurant);
           });
+          this.deleteOfflindData();
         });
-        this.deleteOfflindData();
       }
     });
   }
-  static deleteOfflindData() {
-    this.dbPromise.then(db => {
-      const tx = db.transaction("offline");
+  static deleteOfflindData(id) {
+    return this.dbPromise().then(db => {
+      const tx = db.transaction("offline", "readwrite");
       const store = tx.objectStore("offline");
+      console.log("here");
       store.clear();
       return tx.complete;
     });

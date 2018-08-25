@@ -276,6 +276,7 @@ submitReview = () => {
   } else {
     if (!window.navigator.onLine) {
       DBHelper.offlineUpdateDB(customReview);
+      updateReview();
       alert(
         `Now offline your ${savedItem} item(s) will automatically added when online`
       );
